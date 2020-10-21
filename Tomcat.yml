@@ -94,9 +94,9 @@
         immediate: yes
       when: ansible_service_mgr == "systemd"
       
-    - name: Adding repository NoviNano on VM
+    - name: Adding repository OMS on VM
       git:
         repo=https://github.com/j9mbo/OMS
-        dest=/tmp
+        dest=~/OMS
 
     

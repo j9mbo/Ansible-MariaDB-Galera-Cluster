@@ -1,5 +1,5 @@
 ---
-- hosts: MariaDB
+- hosts: for db
 
   vars:
     mariadb_root_password: password
