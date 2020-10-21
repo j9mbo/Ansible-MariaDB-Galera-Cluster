@@ -1,0 +1,46 @@
+---
+- hosts: Nginx-LB
+
+  vars:
+    mariadb_root_password: password
+    mariadb_new_username: haproxy_root
+    mariadb_new_password: password
+    mariadb_new_database: lv316oms
+
+  tasks:
+   - name: Add epel-release repo
+     yum:
+       name: epel-release
+       state: present
+
+   - name: Install nginx
+     yum:
+       name: nginx
+       state: present
+
+   - name: Insert nginx.conf
+     template:
+       src: nginx.conf
+       dest: /etc/nginx/nginx.conf
+
+   - name: Start NGiNX
+     service:
+       daemon_reload: yes
+       name: nginx
+       state: started
+       enabled: yes
+
+   - name: Start and enable firewalld
+     service:
+       name: firewalld
+       state: started
+       enabled: yes
+     when: ansible_service_mgr == "systemd"
+
+   - name: Open NGiNX port on the firewall
+     firewalld:
+       port: 80/tcp
+       permanent: true
+       state: enabled
+       immediate: yes
+     when: ansible_service_mgr == "systemd"
