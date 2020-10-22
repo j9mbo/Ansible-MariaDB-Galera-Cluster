@@ -1,12 +1,6 @@
 ---
 - hosts: Nginx-LB
 
-  vars:
-    mariadb_root_password: password
-    mariadb_new_username: haproxy_root
-    mariadb_new_password: password
-    mariadb_new_database: lv316oms
-
   tasks:
    - name: Add epel-release repo
      yum:
