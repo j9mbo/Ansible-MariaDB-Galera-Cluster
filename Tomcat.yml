@@ -63,6 +63,7 @@
         creates: /opt/tomcat/bin
 
     - name: Copy tomcat service file
+      become: true
       template:
         src: templates/tomcat.service.j2
         dest: /etc/systemd/system/tomcat.service
