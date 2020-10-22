@@ -167,7 +167,6 @@
         login_password: "{{ mariadb_root_password }}"
       ignore_errors: yes
 
-
     - name: MariaDB | Stop
       become: true
       service:
