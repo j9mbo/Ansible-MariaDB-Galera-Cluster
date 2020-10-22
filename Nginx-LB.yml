@@ -1,6 +1,11 @@
 ---
 - hosts: NginxLB
-
+  
+  vars:
+    tomcat_1: 10.128.0.52
+    tomcat_2: 10.128.0.53
+    tomcat_3: 10.128.0.54
+  
   tasks:
     - name: CentOS | Update
       become: true
@@ -23,7 +28,7 @@
       become: true
       template:
         src: nginx.conf
-        dest: /etc/nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf.j2
 
     - name: Start NGiNX
       become: true
