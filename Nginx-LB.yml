@@ -1,40 +1,51 @@
 ---
-- hosts: Nginx-LB
+- hosts: NginxLB
 
   tasks:
-   - name: Add epel-release repo
-     yum:
-       name: epel-release
-       state: present
+    - name: CentOS | Update
+      become: true
+      yum: name=* state=latest
+      when: ansible_os_family == "RedHat"
+      
+    - name: Add epel-release repo
+      become: true
+      yum:
+        name: epel-release
+        state: present
 
-   - name: Install nginx
-     yum:
-       name: nginx
-       state: present
+    - name: Install nginx
+      become: true
+      yum:
+        name: nginx
+        state: present
 
-   - name: Insert nginx.conf
-     template:
-       src: nginx.conf
-       dest: /etc/nginx/nginx.conf
+    - name: Insert nginx.conf
+      become: true
+      template:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
 
-   - name: Start NGiNX
-     service:
-       daemon_reload: yes
-       name: nginx
-       state: started
-       enabled: yes
+    - name: Start NGiNX
+      become: true
+      service:
+        daemon_reload: yes
+        name: nginx
+        state: started
+        enabled: yes
 
-   - name: Start and enable firewalld
-     service:
-       name: firewalld
-       state: started
-       enabled: yes
-     when: ansible_service_mgr == "systemd"
+    - name: Start and enable firewalld
+      become: true
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+      when: ansible_service_mgr == "systemd"
 
-   - name: Open NGiNX port on the firewall
-     firewalld:
-       port: 80/tcp
-       permanent: true
-       state: enabled
-       immediate: yes
-     when: ansible_service_mgr == "systemd"
+    - name: Open NGiNX port on the firewall
+      become: true
+      firewalld:
+        port: 80/tcp
+        permanent: true
+        state: enabled
+        immediate: yes
+      when: ansible_service_mgr == "systemd"

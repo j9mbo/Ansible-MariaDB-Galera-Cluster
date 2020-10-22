@@ -9,59 +9,70 @@
 
   tasks:
     - name: CentOS | Update
+      become: true
       yum: name=* state=latest
       when: ansible_os_family == "RedHat"
 
     - name: MariaDB | Copy repo template
+      become: true
       template:
         src: templates/mariadb.repo.j2
         dest: /etc/yum.repos.d/mariadb.repo
 
     - name: MariaDB | Install server
+      become: true
       yum:
         state: latest
         name: MariaDB-server
 
     - name: MariaDB | Install client
+      become: true
       yum:
         state: latest
         name: MariaDB-client
 
     - name: MariaDB | Install MariaDB-Python
+      become: true
       yum:
         state: latest
         name: MySQL-python
 
     - name: Selinux | permissive
+      become: true
       selinux:
         state: permissive
         policy: targeted
 
     - name: MariaDB | Start
+      become: true
       service:
         name: mysql
         state: started
         enabled: yes
 
     - name: Firewall | Open port 4567
+      become: true
       firewalld:
         port: 4567/tcp
         permanent: true
         state: enabled
 
     - name: Firewall | Open port 3306
+      become: true
       firewalld:
         port: 3306/tcp
         permanent: true
         state: enabled
 
     - name: Firewall | Open port 873
+      become: true
       firewalld:
         port: 873/tcp
         permanent: true
         state: enabled
 
     - name: Firewall | Open port 4444
+      become: true
       firewalld:
         port: 4444/tcp
         permanent: true
@@ -69,27 +80,32 @@
 
 
     - name: Firewall | Open port 4567
+      become: true
       firewalld:
         port: 4567/tcp
         permanent: true
         state: enabled
 
     - name: Firewall | Open port 4568
+      become: true
       firewalld:
         port: 4568/tcp
         permanent: true
         state: enabled
 
     - name: Firewall | Open port 9200
+      become: true
       firewalld:
         port: 9200/tcp
         permanent: true
         state: enabled
 
     - name: Firewall | Reload
+      become: true
       command: "firewall-cmd --reload"
 
     - name: MariaDB | Set root Password
+      become: true
       mysql_user:
         name: root
         password: "{{ mariadb_root_password }}"
@@ -102,6 +118,7 @@
       ignore_errors: yes
 
     - name: MariaDB | Set root Password
+      become: true
       mysql_user:
         login_user: "{{ mariadb_new_username }}"
         login_password: "{{ mariadb_new_password }}"
@@ -116,6 +133,7 @@
       ignore_errors: yes
 
     - name: MariaDB | Create new user
+      become: true
       mysql_user:
         name: "{{ mariadb_new_username }}"
         password: "{{ mariadb_new_password }}"
@@ -132,6 +150,7 @@
       ignore_errors: yes
 
     - name: MariaDB | Remove all anonymous user accounts
+      become: true
       mysql_user:
         name: ''
         host_all: yes
@@ -141,6 +160,7 @@
       ignore_errors: yes
 
     - name: MariaDB | Remove test database
+      become: true
       mysql_db:
         name: test
         state: absent
@@ -149,6 +169,7 @@
       ignore_errors: yes
 
     - name: MariaDB | Disallow root login remotely
+      become: true
       mysql_user:
         name: root
         host: '%'
@@ -157,15 +178,18 @@
         login_password: "{{ mariadb_root_password }}"
       ignore_errors: yes
 
-#    - name: MariaDB | Reload privilege tables
-#      command: 'mysql -u {{ mariadb_new_username }} -p {{ mariadb_new_password }} "FLUSH PRIVILEGES"'
+    - name: MariaDB | Reload privilege tables
+      become: true
+      command: 'mysql -u {{ mariadb_new_username }} -p {{ mariadb_new_password }} "FLUSH PRIVILEGES"'
 
     - name: MariaDB | Stop
+      become: true
       service:
         name: mysql
         state: stopped
 
     - name: MariaDB | Copy SERVER file
+      become: true
       template:
         src: templates/server.cnf.j2
         dest: /etc/my.cnf.d/server.cnf
@@ -173,13 +197,17 @@
 - hosts: MariaDBMain
   tasks:
     - name: MariaDB | Make this node Main
+      become: true
       command: "sed -i 's/^safe_to_bootstrap: 0/safe_to_bootstrap: 1/g' /var/lib/mysql/grastate.dat"
+      
     - name: MariaDB | Start cluster on 1-st node
+      become: true
       command: "galera_new_cluster"
 
 - hosts: MariaDB-sec
   tasks:
     - name: MariaDB | Start cluster on als nodes
+      become: true
       service:
         name: mysql
         state: started

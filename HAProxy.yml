@@ -8,24 +8,29 @@
 
   tasks:
     - name: CentOS | Update
+      become: true
       yum: name=* state=latest
       when: ansible_os_family == "RedHat"
 
     - name: HAProxy | Install server
+      become: true
       yum:
         state: latest
         name: haproxy
 
     - name: HAProxy | Copy config file
+      become: true
       template:
         src: templates/haproxy.cfg.j2
         dest: /etc/haproxy/haproxy.cfg
 
     - name: HAProxy | Start
+      become: true
       service:
         name: haproxy
         state: started
         enabled: yes
 
     - name: net.ipv4.ip_nonlocal_bind=1
+      become: true
       command: "grep -q 'net.ipv4.ip_nonlocal_bind = 1' /usr/lib/sysctl.d/50-default.conf || echo 'net.ipv4.ip_nonlocal_bind = 1' >> /usr/lib/sysctl.d/50-default.conf"
