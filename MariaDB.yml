@@ -5,7 +5,6 @@
     mariadb_root_password: password
     mariadb_new_username: haproxy_root
     mariadb_new_password: password
-    mariadb_new_database: lv316oms
 
   tasks:
     - name: CentOS | Update
@@ -104,73 +103,28 @@
       become: true
       command: "firewall-cmd --reload"
 
-    - name: MariaDB | Set root Password
-      mysql_user:
-        name: root
-        password: "{{ mariadb_root_password }}"
-        state: present
-        host: "{{ item }}"
-      with_items:
-        - localhost
-        - 127.0.0.1
-        - ::1
-      ignore_errors: yes
-
-    - name: MariaDB | Set root Password
-      mysql_user:
-        login_user: "{{ mariadb_new_username }}"
-        login_password: "{{ mariadb_new_password }}"
-        name: root
-        password: "{{ mariadb_root_password }}"
-        state: present
-        host: "{{ item }}"
-      with_items:
-        - localhost
-        - 127.0.0.1
-        - ::1
-      ignore_errors: yes
 
     - name: MariaDB | Create new user
       mysql_user:
-        name: "{{ mariadb_new_username }}"
+       name: "{{ mariadb_new_username }}"
         password: "{{ mariadb_new_password }}"
         host: "{{ item }}"
         state: present
         priv: '*.*:ALL'
         login_user: root
-        login_password: "{{ mariadb_root_password }}"
       with_items:
         - '%'
         - localhost
         - 127.0.0.1
         - ::1
-      ignore_errors: yes
 
-    - name: MariaDB | Remove all anonymous user accounts
-      mysql_user:
-        name: ''
-        host_all: yes
-        state: absent
-        login_user: root
-        login_password: "{{ mariadb_root_password }}"
-      ignore_errors: yes
-
-    - name: MariaDB | Remove test database
+    - name: MariaDB | Create lv316oms database
       mysql_db:
-        name: test
-        state: absent
-        login_user: root
-        login_password: "{{ mariadb_root_password }}"
-      ignore_errors: yes
-
-    - name: MariaDB | Disallow root login remotely
-      mysql_user:
-        name: root
-        host: '%'
-        state: absent
-        login_user: root
-        login_password: "{{ mariadb_root_password }}"
-      ignore_errors: yes
+        name: lv316oms
+        state: present
+        login_user: "{{ mariadb_new_username }}"
+        login_password: "{{ mariadb_new_password }}"
+     
 
     - name: MariaDB | Stop
       become: true
