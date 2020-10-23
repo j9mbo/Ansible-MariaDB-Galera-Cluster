@@ -106,7 +106,7 @@
 
     - name: MariaDB | Create new user
       mysql_user:
-       name: "{{ mariadb_new_username }}"
+        name: "{{ mariadb_new_username }}"
         password: "{{ mariadb_new_password }}"
         host: "{{ item }}"
         state: present
