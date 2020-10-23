@@ -30,7 +30,12 @@
       yum:
         state: latest
         name: MariaDB-client
-
+        
+    - name: MariaDB | Install MariaDB-Python
+      become: true
+      yum:
+        state: latest
+        name: MySQL-python
 
     - name: Selinux | permissive
       become: true

@@ -2,9 +2,9 @@
 - hosts: NginxLB
   
   vars:
-    tomcat_1: 10.128.0.52
-    tomcat_2: 10.128.0.53
-    tomcat_3: 10.128.0.54
+    tomcat_1: 10.128.0.63 
+    tomcat_2: 10.142.0.7
+    tomcat_3: 10.138.0.2
   
   tasks:
     - name: CentOS | Update
@@ -27,8 +27,8 @@
     - name: Insert nginx.conf
       become: true
       template:
-        src: nginx.conf
-        dest: /etc/nginx/nginx.conf.j2
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
 
     - name: Start NGiNX
       become: true
@@ -54,3 +54,7 @@
         state: enabled
         immediate: yes
       when: ansible_service_mgr == "systemd"
+      
+    - name: SELinux | Allow connection
+      become: true
+      command: "setsebool -P httpd_can_network_connect 1"
