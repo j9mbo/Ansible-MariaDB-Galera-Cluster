@@ -1,0 +1,14 @@
+---
+- hosts: MariaDBMain
+
+  tasks:
+    - name: MariaDB | Copy db dump
+      become: true
+      template:
+        src: templates/addDataMySql.sql
+        dest: /tmp/addDataMySql.sql
+
+    - name: MariaDB | Fill in db using dump
+      become: true
+      command: mysql -u haproxy_root -ppassword -e "source /tmp/addDataMySql.sql"
+

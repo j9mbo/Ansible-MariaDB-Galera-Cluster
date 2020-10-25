@@ -1,10 +1,10 @@
 ---
-- hosts: NginxLB
+- hosts: Nginx-LB
   
   vars:
-    tomcat_1: 10.128.0.63 
-    tomcat_2: 10.142.0.7
-    tomcat_3: 10.138.0.2
+    tomcat_1: 10.128.15.202 
+    tomcat_2: 10.142.0.17
+    tomcat_3: 10.138.0.7
   
   tasks:
     - name: CentOS | Update

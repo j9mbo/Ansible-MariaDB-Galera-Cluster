@@ -2,9 +2,9 @@
 - hosts: HAProxy
 
   vars:
-    mysql_1: 192.168.0.3
-    mysql_2: 192.168.0.4
-    mysql_3: 192.168.0.5
+    mysql_1: 10.128.15.201 
+    mysql_2: 10.168.0.16
+    mysql_3: 10.150.0.9
 
   tasks:
     - name: CentOS | Update
@@ -31,6 +31,12 @@
         state: started
         enabled: yes
 
-    - name: net.ipv4.ip_nonlocal_bind=1
+    - name: SELinux | Allow connection
       become: true
-      command: "grep -q 'net.ipv4.ip_nonlocal_bind = 1' /usr/lib/sysctl.d/50-default.conf || echo 'net.ipv4.ip_nonlocal_bind = 1' >> /usr/lib/sysctl.d/50-default.conf"
+      command: "setsebool -P haproxy_connect_any=1"
+    
+    - name: HAProxy | Restart
+      become: true
+      service:
+        name: haproxy
+        state: restarted

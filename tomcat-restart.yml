@@ -1,0 +1,8 @@
+---
+- hosts: Tomcat
+  tasks:
+    - name: Tomcat | Restart 
+      become: true
+      service:
+        name: tomcat
+        state: restarted

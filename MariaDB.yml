@@ -2,7 +2,6 @@
 - hosts: MariaDB
 
   vars:
-    mariadb_root_password: password
     mariadb_new_username: haproxy_root
     mariadb_new_password: password
 
