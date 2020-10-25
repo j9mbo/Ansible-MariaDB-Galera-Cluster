@@ -20,7 +20,7 @@
     - name: Install basic packages
       become: true
       package:
-        name: ['vim','wget','unzip','curl','git']
+        name: ['vim','wget','unzip','curl']
         state: present
         
     - name: Add tomcat group

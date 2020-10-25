@@ -2,9 +2,9 @@
 - hosts: HAProxy
 
   vars:
-    mysql_1: 10.128.15.201 
-    mysql_2: 10.168.0.16
-    mysql_3: 10.150.0.9
+    mysql_1: 10.128.15.203 
+    mysql_2: 10.168.0.17
+    mysql_3: 10.150.0.10
 
   tasks:
     - name: CentOS | Update
